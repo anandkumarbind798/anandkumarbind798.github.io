@@ -27,6 +27,8 @@ body{
   overflow:hidden;
 }
 
+/* ================= HEARTS ================= */
+
 .hearts{
   position:fixed;
   inset:0;
@@ -46,10 +48,50 @@ body{
   to{transform:translateY(-110vh);opacity:0;}
 }
 
+/* ================= LEAVES ================= */
+
+.leaves{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+
+.leaf{
+  position:absolute;
+  top:-60px;
+  animation-name:fallWind;
+  animation-timing-function:linear;
+  animation-iteration-count:infinite;
+  will-change:transform;
+}
+
+@keyframes fallWind{
+  0%{
+    transform:translateX(0) translateY(0) rotate(0deg);
+    opacity:1;
+  }
+  25%{
+    transform:translateX(25px) translateY(25vh) rotate(90deg);
+  }
+  50%{
+    transform:translateX(-25px) translateY(50vh) rotate(180deg);
+  }
+  75%{
+    transform:translateX(20px) translateY(75vh) rotate(270deg);
+  }
+  100%{
+    transform:translateX(-15px) translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* ================= UI ================= */
+
 .container{
   width:360px;
   background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(0px);
+  backdrop-filter: blur(8px);
   border-radius:22px;
   padding:25px;
   box-shadow:0 20px 40px rgba(0,0,0,0.35);
@@ -145,6 +187,7 @@ button{
 <body>
 
 <div class="hearts" id="hearts"></div>
+<div class="leaves" id="leaves"></div>
 
 <div class="container">
   <div class="credit">Designed & Developed by Anand Kumar</div>
@@ -161,7 +204,6 @@ button{
     <button class="btn-friend" onclick="calculate('friend')">Check Friendship</button>
     <div class="progress-box"><div class="progress friend" id="fbar"></div></div>
     <div class="result" id="fresult"></div>
-    <div class="message" id="fmsg"></div>
   </div>
 
   <div id="love" class="form">
@@ -170,7 +212,6 @@ button{
     <button class="btn-love" onclick="calculate('love')">Check Love</button>
     <div class="progress-box"><div class="progress love" id="lbar"></div></div>
     <div class="result" id="lresult"></div>
-    <div class="message" id="lmsg"></div>
   </div>
 </div>
 
@@ -179,7 +220,10 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");
 }
 
+/* ===== HEARTS ===== */
+
 const heartsBox=document.getElementById("hearts");
+
 setInterval(()=>{
   const h=document.createElement("div");
   h.className="heart";
@@ -191,10 +235,28 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),10000);
 },500);
 
+/* ===== LEAVES WITH WIND ===== */
+
+const leavesBox=document.getElementById("leaves");
+const leafEmojis=["🌿","🍁","🍂","🍀","☘️"];
+
+setInterval(()=>{
+  const leaf=document.createElement("div");
+  leaf.className="leaf";
+  leaf.innerHTML=leafEmojis[Math.floor(Math.random()*leafEmojis.length)];
+  leaf.style.left=Math.random()*100+"%";
+  leaf.style.fontSize=18+Math.random()*18+"px";
+  const duration=8+Math.random()*6;
+  leaf.style.animationDuration=duration+"s";
+  leavesBox.appendChild(leaf);
+  setTimeout(()=>leaf.remove(),(duration+2)*1000);
+},600);
+
+/* ===== UI LOGIC ===== */
+
 function switchTab(type){
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active","friend","love"));
   document.querySelectorAll(".form").forEach(f=>f.classList.remove("active"));
-
   if(type==="friend"){
     document.querySelector(".tab:first-child").classList.add("active","friend");
     friend.classList.add("active");
@@ -215,13 +277,11 @@ function calculate(type){
     n1=lname1.value; n2=lname2.value;
     bar=lbar; res=lresult;
   }
-
   if(!n1||!n2){
     res.innerText="Enter both names 🙂";
     bar.style.width="0%";
     return;
   }
-
   let sum=0;
   for(let c of (n1+n2).toLowerCase()) sum+=c.charCodeAt(0);
   let percent=(sum%51)+50;
