@@ -1,7 +1,7 @@
 {
   "name": "Friend & Love Meter",
   "short_name": "LoveMeter",
-  "start_url": "./index.php",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#1e3c72",
