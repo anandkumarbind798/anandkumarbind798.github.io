@@ -1,2 +1,2 @@
-# anandkumardind798.github.io
+# anandkumarbind798.github.io
 Check friendship and love compatibility online!
