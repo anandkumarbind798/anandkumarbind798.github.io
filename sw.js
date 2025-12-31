@@ -1,7 +1,7 @@
 const CACHE_NAME = "love-friend-meter-v3";
 
 const ASSETS_TO_CACHE = [
-  "./index.php",
+  "./index.html",
   "./manifest.json",
   "./bg.jpg",
   "./icons/icon-192.png",
